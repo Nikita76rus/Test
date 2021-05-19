@@ -138,6 +138,46 @@ void autentification(object sender, RoutedEventArgs e)
                 adapter.Fill(Table);
                 Storekeep_Table.ItemsSource = Table.DefaultView;
             }
+            
+ public class Phone
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Company { get; set; }
+    public int Price { get; set; }
+}
+
+using System.Data.Entity;
+ 
+public class MobileContext : DbContext
+{
+    public MobileContext(): base("DefaultConnection")
+    {
+ 
+    }
+    public DbSet<Phone> Phones { get; set; }
+}
+ <DataGridTextColumn Binding="{Binding Title}" Header="Модель" Width="100"/>
+ 
+   db = new MobileContext();
+            db.Phones.Load(); // загружаем данные
+            phonesGrid.ItemsSource = db.Phones.Local.ToBindingList(); // устанавливаем привязку к кэшу
+            
+             private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (phonesGrid.SelectedItems.Count>0)
+            {
+                for (int i = 0; i < phonesGrid.SelectedItems.Count; i++)
+                {
+                    Phone phone = phonesGrid.SelectedItems[i] as Phone;
+                    if (phone != null)
+                    {
+                        db.Phones.Remove(phone);
+                    }
+                }
+            }
+            db.SaveChanges();
+        }
 ///////////////////////////////////////FILE/////////////////////////////////////////
 private void button1_Click(object sender, RoutedEventArgs e)
 {
